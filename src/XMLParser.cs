@@ -7,23 +7,13 @@ using System.Collections.Generic;
 
 public class XMLParser
 {
-    private Information info;
-    private string XMLcontent;
-    private StringBuilder sb = new StringBuilder();
+
     public XMLParser()
-    {
-        Debug.Log("Parser was created");
-        // FOR READING EXTERNAL XML BEGIN
-        // Create a resolver with default credentials.
-        
-        // END   
-
-
-
+    {   
     }
     
     
-    public List<Information> parse(string fileName)
+    public static List<Information> Parse(string fileName)
     {
         StringReader sr = new StringReader(fileName);
         // Skip the BOM, Unity bug
@@ -32,8 +22,6 @@ public class XMLParser
 
         
         Debug.Log("Parsing file: " + fileName);
-        //Do proper format for parsing the Xml as a string
-        //TODO Need to fix arraysize
         List<Information> objectInfo = new List<Information>();
         int currentID = 0;
         int nextID = 0;

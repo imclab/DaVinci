@@ -6,23 +6,36 @@ using System.Collections.Generic;
 public class CreateEnvironment : MonoBehaviour
 {
     private string urlPath;
-    private XMLParser xml;
     private List<Information> info;
     public GameObject[] activeObjects;
-    private string XMLcontent;
+    
 
     void Start()
     {
+
+
+
     }
     public IEnumerator intiateRoom(string path)
     {
         Debug.Log("Yielding");
         yield return new WaitForSeconds(1);
-        StartCoroutine(downloadXML(path));
+        StartCoroutine(DownloadXML(path));
         Debug.Log("Unity: Start");
     }
 
-   private IEnumerator download(string url, GameObject toBeRendered)
+
+    public void doLevelSetup(string xmlContent)
+    {
+        Debug.Log("Doing lvl setup");
+        //addCollidersToLevel();
+        MakeObjects(XMLParser.Parse(xmlContent));
+        GetComponent<SplashScreen>().StartFade();
+
+
+    }
+
+    private IEnumerator download(string url, GameObject toBeRendered)
     {
         WWW loader = new WWW(url);
         Debug.Log("Downloading");
@@ -37,8 +50,8 @@ public class CreateEnvironment : MonoBehaviour
             toBeRendered.renderer.material.mainTexture = loader.texture;
         }
     }
-
-    private IEnumerator downloadXML(string url)
+    
+    private IEnumerator DownloadXML(string url)
     {
         WWW loader = new WWW(url);
         Debug.Log("Downloading XML");
@@ -50,13 +63,11 @@ public class CreateEnvironment : MonoBehaviour
         else
         {
             Debug.Log("Download of XML successful from url: " + url);
-            XMLcontent = loader.text;
-            Debug.Log("Doing setup");
-            doLevelSetup();
+            doLevelSetup(loader.text);
 
         }
     }
-
+    
     public void MakeObjects(List<Information> info)
     {
         GameObject objects;
@@ -74,7 +85,6 @@ public class CreateEnvironment : MonoBehaviour
             Debug.Log(info.Count);
             if (inf.getType().Equals("painting"))
             {
-                Debug.Log("Object with id: " + i + "is a painting");
                 StartCoroutine(download(inf.TextureForObject(), objects));
                 Debug.Log("Adding scripts to object");
                 string[] scripts = inf.ScriptsToBeUsed();
@@ -82,7 +92,7 @@ public class CreateEnvironment : MonoBehaviour
                 {
                     objects.AddComponent(s);
                 }
-                objects.GetComponent<HoverToolTipScript>().tooltip = inf.UseTooltip(); ;
+                objects.GetComponent<ToolTip>().tooltip = inf.UseTooltip(); ;
                 Debug.Log("Rendering texture for object with id: " + i);
                 
             }
@@ -94,30 +104,16 @@ public class CreateEnvironment : MonoBehaviour
         
     }
 
-    private void readInformation()
-    {
-        info = xml.parse(XMLcontent);
-    }
+    
 
-    private void addCollidersToLevel()
+    private void AddCollidersToLevel()
     {
         GameObject[] level = GameObject.FindGameObjectsWithTag("BOX");
-        for (int j = 0; j < level.Length; j++)
+        foreach (GameObject g in level)
         {
-            level[j].AddComponent<BoxCollider>();
+            g.AddComponent<MeshCollider>();
 
         }
-
-    }
-    public void doLevelSetup()
-    {
-        Debug.Log("Doing lvl setup");
-        //addCollidersToLevel();
-        xml = new XMLParser();
-        readInformation();
-        MakeObjects(info);
-        GetComponent<SplashScreen>().StartFade();
-
 
     }
 }
