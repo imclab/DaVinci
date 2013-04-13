@@ -78,7 +78,7 @@ var Davinci = function () {
 
         window.addEventListener('resize', this.onWindowResize, false);
         textures.push('/images/ml.jpg');
-        createPainting('/images/ml.jpg', 'this is monalisa');
+        crtPaintWebGL('/images/ml.jpg', 'this is monalisa');
 
     }
 
@@ -205,7 +205,7 @@ var Davinci = function () {
         renderer.render(scene, camera);
     }
 
-    function createPainting(texUrl, tooltip) {
+    function crtPaintWebGL(texUrl, tooltip) {
 
         var materialArray = [];
         materialArray.push(new THREE.MeshBasicMaterial( { color: 0xc0c0c0 }));
@@ -228,6 +228,44 @@ var Davinci = function () {
 
 
     }
+
+    function crtPaintCSS3D (texUrl, tooltip) {
+
+       var element = document.createElement('div');
+       element.className('painting');
+       var paint = document.createElement('img');
+       paint.src = texUrl;
+       element.appendChild(paint);
+       
+       var description = document.createElement('div');
+       description.className = 'description';
+       description.textContent = tooltip;
+       element.appendChild(description);
+       var obj = new THREE.CSS3DObject(element);
+       obj.position.x = Math.random() * 4000 - 2000;
+       obj.position.y = Math.random() * 4000 - 2000;
+       obj.position.z = Math.random() * 4000 - 2000;
+       scene.add( obj );
+       objects.push( obj );
+
+    }
+    //TODO    
+    function loadScene(path) {
+        $.getJSON(path, function (data) {
+           buildScene(data.scene);
+           placePaintings(data.paintings);
+            
+        });
+    }
+    //TODO
+    function buildScene(scene) {
+
+    }
+    //TODO
+    function placePaintings(paintings) {
+
+    }
+    
     function generateTooltip(currentObject, tooltip) {
 
         $("#container").append('<div id=' + objects.indexOf(currentObject) + ' title=' + '"' + tooltip + '"' + "></div>");
@@ -261,7 +299,7 @@ var Davinci = function () {
     return {
         init: init,
         animate: animate,
-        createPainting: createPainting,
+        crtPaintWebGL: crtPaintWebGL,
         setEnable: setEnable
     };
 
@@ -301,7 +339,7 @@ function postit(url, data, callbackFunction) {
 $(document).ready(function() {
     Davinci.init(window.innerWidth, window.innerHeight);
     Davinci.animate();
-    Davinci.createPainting('/images/fl.jpg', "hejsan hej");
+    Davinci.crtPaintWebGL('/images/fl.jpg', "hejsan hej");
 
             $('#dialog').dialog({
                 modal: true,
