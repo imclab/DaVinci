@@ -77,8 +77,6 @@ var Davinci = function () {
         renderer.domElement.addEventListener('mouseup', onDocumentMouseUp, false);
 
         window.addEventListener('resize', this.onWindowResize, false);
-        textures.push('/images/ml.jpg');
-        crtPaintWebGL('/images/ml.jpg', 'this is monalisa');
 
     }
 
@@ -168,12 +166,12 @@ var Davinci = function () {
             controls.enable = false;
 
             SELECTED = intersects[0].object;
-            zoomImage('/images/ml.jpg');
+            zoomImage(textures[objects.indexOf(SELECTED)]);
             current = SELECTED;
 
         }
-
     }
+
     function setEnable() {
 
         controls.activeLook = true;
@@ -218,11 +216,11 @@ var Davinci = function () {
         var cubeGeometry = new THREE.CubeGeometry( 85, 85, 1 , 1, 1, 1 );
         var painting = new THREE.Mesh(cubeGeometry,new THREE.MeshFaceMaterial( materialArray ));
         painting.position.set(0, 0, 0);
-        //var painting = new Painting(nextId);
-        //painting.createObject(texUrl);
+
         scene.add(painting);
         nextId++;
         objects.push(painting);
+        textures.push(texUrl);
         current = painting;
         generateTooltip(current, tooltip);
 
@@ -265,7 +263,7 @@ var Davinci = function () {
     function placePaintings(paintings) {
 
     }
-    
+
     function generateTooltip(currentObject, tooltip) {
 
         $("#container").append('<div id=' + objects.indexOf(currentObject) + ' title=' + '"' + tooltip + '"' + "></div>");
@@ -300,7 +298,8 @@ var Davinci = function () {
         init: init,
         animate: animate,
         crtPaintWebGL: crtPaintWebGL,
-        setEnable: setEnable
+        setEnable: setEnable,
+        detect: detect
     };
 
 }();
@@ -339,7 +338,8 @@ function postit(url, data, callbackFunction) {
 $(document).ready(function() {
     Davinci.init(window.innerWidth, window.innerHeight);
     Davinci.animate();
-    Davinci.crtPaintWebGL('/images/fl.jpg', "hejsan hej");
+
+    Davinci.detect() ? Davinci.crtPaintWebGL('/images/ml.jpg', "webGL") : Davinci.crtPaintCSS3D('/images/ml.jpg', "CSS3D");
 
             $('#dialog').dialog({
                 modal: true,
