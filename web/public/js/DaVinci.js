@@ -72,9 +72,9 @@ var Davinci = function () {
 
         projector = new THREE.Projector();
 
-        renderer.domElement.addEventListener('mousemove', this.onDocumentMouseMove, false);
-        renderer.domElement.addEventListener('mousedown', this.onDocumentMouseDown, false);
-        renderer.domElement.addEventListener('mouseup', this.onDocumentMouseUp, false);
+        renderer.domElement.addEventListener('mousemove', onDocumentMouseMove, false);
+        renderer.domElement.addEventListener('mousedown', onDocumentMouseDown, false);
+        renderer.domElement.addEventListener('mouseup', onDocumentMouseUp, false);
 
         window.addEventListener('resize', this.onWindowResize, false);
         textures.push('/images/ml.jpg');
@@ -165,22 +165,27 @@ var Davinci = function () {
 
         if (intersects.length > 0) {
 
-            controls.enabled = false;
+            controls.enable = false;
 
             SELECTED = intersects[0].object;
             zoomImage('/images/ml.jpg');
             current = SELECTED;
-            container.style.cursor = 'pointer';
 
         }
 
+    }
+    function setEnable() {
+
+        controls.activeLook = true;
+        if (INTERSECTED) {
+            SELECTED = null;
+        }
+        container.style.cursor = 'auto';
     }
 
     function onDocumentMouseUp(event) {
 
         event.preventDefault();
-
-
         container.style.cursor = 'auto';
 
     }
@@ -233,7 +238,6 @@ var Davinci = function () {
 
         imageDialog = $("#dialog");
         imageTag = $('#myimage');
-
         controls.activeLook = false;
         imageTag.one("load", function (){
         }).attr('src', uri);
@@ -257,7 +261,8 @@ var Davinci = function () {
     return {
         init: init,
         animate: animate,
-        createPainting: createPainting
+        createPainting: createPainting,
+        setEnable: setEnable
     };
 
 }();
@@ -286,7 +291,9 @@ function postit(url, data, callbackFunction) {
         success: function (response) {
             callbackFunction(response.url, response.tooltip);
         },
-        error: function (){}
+        error: function (){
+
+        }
     });
 }
 
@@ -312,11 +319,7 @@ $(document).ready(function() {
                 width: 'auto',
                 height: 'auto',
                 close: function () {
-                    controls.activeLook = true;
-                    if (INTERSECTED) {
-                        SELECTED = null;
-                    }
-                    container.style.cursor = 'auto';
+                    Davinci.setEnable(); 
 
                 }
             });
