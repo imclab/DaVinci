@@ -202,7 +202,7 @@ var Davinci = function () {
 
         renderer.render(scene, camera);
     }
-
+/*
     function crtPaintWebGL(texUrl, tooltip) {
 
         var materialArray = [];
@@ -225,7 +225,7 @@ var Davinci = function () {
         generateTooltip(current, tooltip);
 
 
-    }
+    } */
 
     function crtPaintCSS3D (texUrl, tooltip) {
 
@@ -255,13 +255,31 @@ var Davinci = function () {
             
         });
     }
-    //TODO
-    function buildScene(scene) {
-
-    }
-    //TODO
+    
     function placePaintings(paintings) {
 
+        for(var v in paintings) {
+            createPainting(v);
+        }
+    }
+
+    function createPainting(paintingInfo) {
+
+        var materialArray = [];
+        var side = new THREE.MeshBasicMaterial( { color: 0xc0c0c0 })
+        for (var i = 0; i < 6 ; i++) {
+            i == 4 ? materialArray.push( new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( paintingInfo.texture )} )) : materialArray.push(side); 
+        };
+        var cubeGeometry = new THREE.CubeGeometry( paintingInfo.dimension.x, paintingInfo.dimension.y, 1 , 1, 1, 1 );
+        var painting = new THREE.Mesh(cubeGeometry,new THREE.MeshFaceMaterial( materialArray ));
+        painting.position.set( paintingInfo.placement.x, paintingInfo.placement.y, paintingInfo.placement.z );
+
+        scene.add(painting);
+        nextId++;
+        objects.push(painting);
+        textures.push(texUrl);
+        current = painting;
+        generateTooltip(current, paintingInfo.tooltip);
     }
 
     function generateTooltip(currentObject, tooltip) {
@@ -280,11 +298,11 @@ var Davinci = function () {
         imageDialog.dialog('open');
     }
 
-    function loadJSONObj(roomName) {
+    function buildScene(roomName) {
 
         var loader = new THREE.JSONLoader();
 
-        loader.load('models/test.js', function ( geometry ) {
+        loader.load( roomName, function ( geometry ) {
             var room = new THREE.Mesh( geometry, new THREE.MeshNormalMaterial() );
             room.scale.set(10,10,10);
             room.position.x = 0;
@@ -294,6 +312,7 @@ var Davinci = function () {
 
         });
     }
+    
     return {
         init: init,
         animate: animate,
