@@ -251,17 +251,13 @@ var Davinci = function () {
     function loadScene(path) {
         $.getJSON(path, function (data) {
            buildScene(data.scene);
-           placePaintings(data.paintings);
-            
+           $.each(data.paintings, function(i, item){
+            createPainting(item);
+
+           });
         });
     }
     
-    function placePaintings(paintings) {
-
-        for(var v in paintings) {
-            createPainting(v);
-        }
-    }
 
     function createPainting(paintingInfo) {
 
@@ -277,7 +273,7 @@ var Davinci = function () {
         scene.add(painting);
         nextId++;
         objects.push(painting);
-        textures.push(texUrl);
+        textures.push(paintingInfo.texture);
         current = painting;
         generateTooltip(current, paintingInfo.tooltip);
     }
@@ -304,21 +300,23 @@ var Davinci = function () {
 
         loader.load( roomName, function ( geometry ) {
             var room = new THREE.Mesh( geometry, new THREE.MeshNormalMaterial() );
-            room.scale.set(10,10,10);
+            room.scale.set(50,50,50);
             room.position.x = 0;
-            room.position.y = 0;
+            room.position.y = -45;
             room.position.z = 0;
+            room.rotation.y = 0; 
+            room.rotation.x = Math.PI / 2;
             scene.add(room);
 
         });
     }
-    
+
     return {
         init: init,
         animate: animate,
-        crtPaintWebGL: crtPaintWebGL,
         setEnable: setEnable,
-        detect: detect
+        detect: detect,
+        loadScene: loadScene
     };
 
 }();
@@ -358,7 +356,7 @@ $(document).ready(function() {
     Davinci.init(window.innerWidth, window.innerHeight);
     Davinci.animate();
 
-    Davinci.detect() ? Davinci.crtPaintWebGL('/images/ml.jpg', "webGL") : Davinci.crtPaintCSS3D('/images/ml.jpg', "CSS3D");
+    Davinci.detect() ? Davinci.loadScene('/JSONfiles/test.json') : Davinci.crtPaintCSS3D('/images/ml.jpg', "CSS3D");
 
             $('#dialog').dialog({
                 modal: true,

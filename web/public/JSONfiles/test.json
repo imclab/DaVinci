@@ -1,0 +1,8 @@
+{
+	"scene" : "scenes/test.js",
+	"paintings" : [
+	{ "dimension": {"x": "10","y": "10","z": "0"}, "placement" : { "x": "0", "y": "0", "z": "0"}, "tooltip" : "A nice tooltip", "texture" : "images/fl.jpg" },
+	{ "dimension": {"x": "10","y": "10","z": "0"}, "placement" : { "x": "20", "y": "0", "z": "0"}, "tooltip" : "A cool tooltip", "texture" : "images/fl.jpg" }
+	]
+
+}
