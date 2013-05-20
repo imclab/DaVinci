@@ -34,6 +34,9 @@ this.autoSpeedFactor = 0.0;
 this.mouseX = 0;
 this.mouseY = 0;
 
+this.prevX = 0;
+this.prevY = 0;
+
 this.lat = 0;
 this.lon = 0;
 this.phi = 0;
@@ -75,18 +78,29 @@ this.viewHalfY = this.domElement.offsetHeight / 2;
 };
 
 this.onMouseMove = function ( event ) {
+	var test = Math.abs(((event.pageX - this.viewHalfX) - this.prevX) + ((event.pageY - this.viewHalfY)  - this.prevY));
+	if(Math.abs(((event.pageX - this.viewHalfX) - this.prevX) + ((event.pageY - this.viewHalfY)  - this.prevY)) > 1) {
 
-if ( this.domElement === document ) {
+		this.activeLook = true;
+		if ( this.domElement === document ) {
 
-this.mouseX = event.pageX - this.viewHalfX;
-this.mouseY = event.pageY - this.viewHalfY;
+			this.mouseX = event.pageX - this.viewHalfX;
+			this.mouseY = event.pageY - this.viewHalfY;
 
-} else {
+		} else {
 
-this.mouseX = event.pageX - this.domElement.offsetLeft - this.viewHalfX;
-this.mouseY = event.pageY - this.domElement.offsetTop - this.viewHalfY;
+		this.mouseX = event.pageX - this.domElement.offsetLeft - this.viewHalfX;
+		this.mouseY = event.pageY - this.domElement.offsetTop - this.viewHalfY;
 
-}
+		}
+		this.prevX = this.mouseX;
+		this.prevY = this.mouseY;
+
+
+	}
+	else {
+		this.activeLook = false;	
+	}
 
 };
 
