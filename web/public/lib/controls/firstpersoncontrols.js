@@ -34,9 +34,6 @@ this.autoSpeedFactor = 0.0;
 this.mouseX = 0;
 this.mouseY = 0;
 
-this.prevX = 0;
-this.prevY = 0;
-
 this.lat = 0;
 this.lon = 0;
 this.phi = 0;
@@ -48,7 +45,7 @@ this.moveLeft = false;
 this.moveRight = false;
 this.freeze = false;
 
-this.mouseDragOn = false;
+this.mouseDragOn = true;
 
 this.viewHalfX = 0;
 this.viewHalfY = 0;
@@ -77,30 +74,65 @@ this.viewHalfY = this.domElement.offsetHeight / 2;
 
 };
 
+this.onMouseDown = function ( event ) {
+
+if ( this.domElement !== document ) {
+
+this.domElement.focus();
+
+}
+
+event.preventDefault();
+event.stopPropagation();
+
+if ( this.activeLook ) {
+
+switch ( event.button ) {
+
+case 0: this.moveForward = true; break;
+case 2: this.moveBackward = true; break;
+
+}
+
+}
+
+this.mouseDragOn = true;
+
+};
+
+this.onMouseUp = function ( event ) {
+
+event.preventDefault();
+event.stopPropagation();
+
+if ( this.activeLook ) {
+
+switch ( event.button ) {
+
+case 0: this.moveForward = false; break;
+case 2: this.moveBackward = false; break;
+
+}
+
+}
+
+this.mouseDragOn = false;
+
+};
+
 this.onMouseMove = function ( event ) {
-	var test = Math.abs(((event.pageX - this.viewHalfX) - this.prevX) + ((event.pageY - this.viewHalfY)  - this.prevY));
-	if(Math.abs(((event.pageX - this.viewHalfX) - this.prevX) + ((event.pageY - this.viewHalfY)  - this.prevY)) > 1) {
 
-		this.activeLook = true;
-		if ( this.domElement === document ) {
+if ( this.domElement === document ) {
 
-			this.mouseX = event.pageX - this.viewHalfX;
-			this.mouseY = event.pageY - this.viewHalfY;
+this.mouseX = event.pageX - this.viewHalfX;
+this.mouseY = event.pageY - this.viewHalfY;
 
-		} else {
+} else {
 
-		this.mouseX = event.pageX - this.domElement.offsetLeft - this.viewHalfX;
-		this.mouseY = event.pageY - this.domElement.offsetTop - this.viewHalfY;
+this.mouseX = event.pageX - this.domElement.offsetLeft - this.viewHalfX;
+this.mouseY = event.pageY - this.domElement.offsetTop - this.viewHalfY;
 
-		}
-		this.prevX = this.mouseX;
-		this.prevY = this.mouseY;
-
-
-	}
-	else {
-		this.activeLook = false;	
-	}
+}
 
 };
 
@@ -231,6 +263,8 @@ this.object.lookAt( targetPosition );
 this.domElement.addEventListener( 'contextmenu', function ( event ) { event.preventDefault(); }, false );
 
 this.domElement.addEventListener( 'mousemove', bind( this, this.onMouseMove ), false );
+this.domElement.addEventListener( 'mousedown', bind( this, this.onMouseDown ), false );
+this.domElement.addEventListener( 'mouseup', bind( this, this.onMouseUp ), false );
 this.domElement.addEventListener( 'keydown', bind( this, this.onKeyDown ), false );
 this.domElement.addEventListener( 'keyup', bind( this, this.onKeyUp ), false );
 

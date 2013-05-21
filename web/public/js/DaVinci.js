@@ -1,16 +1,8 @@
 var Davinci = function () {
 
-    var container;
-    var nextId = 0;
-    var camera, controls, scene, projector, renderer;
-    var objects = [], plane;
-    var textures = [];
-    var width = window.innerWidth,
-        height = window.innerHeight;
-    var current = null;
-    var clock;
-    var mouse = new THREE.Vector2(),
-    offset = new THREE.Vector3(),INTERSECTED, SELECTED;
+    var nextId = 0, camera, controls, scene, projector, renderer, container, objects = [], plane;
+    var textures = [], width = window.innerWidth, height = window.innerHeight, current = null;
+    var clock, mouse = new THREE.Vector2(), offset = new THREE.Vector3(), INTERSECTED, SELECTED;
 
    function init(width, height)  {
 
@@ -24,8 +16,6 @@ var Davinci = function () {
         camera.lookAt(scene.position);
 
         detect() ? initWebGL(width, height) : initCSS3D(widht, height);
-
-
     }
 
     function detect() {
@@ -40,9 +30,7 @@ var Davinci = function () {
 
         controls = new THREE.FirstPersonControls(camera);
         controls.movementSpeed = 100;
-        controls.lookSpeed = 0.125;
-        controls.lookVertical = false;
-        
+
         container.appendChild(renderer.domElement);
 
         var light = new THREE.DirectionalLight(0xffffff, 2);
@@ -119,7 +107,6 @@ var Davinci = function () {
             return;
 
         }
-
 
         var intersects = ray.intersectObjects(objects);
 
@@ -299,7 +286,7 @@ var Davinci = function () {
         var loader = new THREE.JSONLoader();
 
         loader.load( roomName, function ( geometry ) {
-            var room = new THREE.Mesh( geometry, new THREE.MeshNormalMaterial() );
+            var room = new THREE.Mesh( geometry, new THREE.MeshNormalMaterial());
             room.scale.set(50,50,50);
             room.position.x = 0;
             room.position.y = -45;
