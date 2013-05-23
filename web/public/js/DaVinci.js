@@ -21,7 +21,7 @@ var Davinci = function () {
     function detect() {
         return window.WebGLRenderingContext;
     }
-
+//Changed
     function initWebGL(width, height) {
 
         renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -30,6 +30,8 @@ var Davinci = function () {
 
         controls = new THREE.FirstPersonControls(camera);
         controls.movementSpeed = 100;
+        controls.lookSpeed = 0.5;
+        controls.lookVertical = false;
 
         container.appendChild(renderer.domElement);
 
