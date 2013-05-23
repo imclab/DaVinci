@@ -1,0 +1,11 @@
+
+{
+ "name": "Davinci",
+ "author": "Simon Thornqvist <simon.thornqvist@gmail.com>",
+ "description": "Art Gallery",
+ "version": "0.0.1",
+ "dependencies":
+  {
+   "express" : "*"
+  }
+}
